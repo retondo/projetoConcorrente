@@ -2,24 +2,21 @@ package sudoku;
 
 import java.io.IOException;
 import java.util.Scanner;
-import data.Data;
-import io.PrintMatrix;
-import io.ReadFile;
+import data.Matrix;
 
 public class Main {
 	
 	public static void main(String[] args) {
-		Data data = new Data();
-		ReadFile rf = new ReadFile();
-		PrintMatrix print = new PrintMatrix();
+		Matrix m = new Matrix();
 		Scanner s = new Scanner(System.in);
 		
 		System.out.print("Insira o nome do arquivo de entrada: ");
 		String fileName = s.next();
 		
+		// Lê o arquivo de entrada e imprime a matriz
 		try {
-			rf.readFile(fileName, data);
-			print.print(data);
+			m.read(fileName);
+			m.print();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
