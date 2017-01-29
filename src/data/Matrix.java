@@ -8,16 +8,25 @@ import java.util.Scanner;
 public class Matrix {
 	private int[][] matrix;
 	private int smallerXInput;		// Store the smaller (x,y) coordinate to identify submatrix
-	private int smallerYInput;
+	private int smallerYInput; 
+	private String[] rulesSolution;	// Stores rules of solution by submatrix
+	private long numberSolutions;	// Number of possible solutions
 	
 	public Matrix() {
 		this.matrix = new int[9][9];
 		this.smallerXInput = 0;
 		this.smallerYInput = 0;
+		this.rulesSolution = new String[] { "BDCGEIFH", "AECHDIGF", "BFAIEGDH",
+											"AEGFBICH", "BDFHAICG", "CEDIBGHA",
+											"DHAIECBF", "GEBIDCFA", "FHCGEADB" };
 	}
 	
 	public int[] getRow(int x) {
 		return matrix[x];
+	}
+	
+	public int[] getColumn(int y) {
+		return matrix[y];
 	}
 
 	public int getCellValue(int x, int y) {
@@ -34,6 +43,28 @@ public class Matrix {
 
 	public int getSmallerYInput() {
 		return smallerYInput;
+	}
+	
+	public String getRulesSolution() {
+		if (smallerXInput == 1 && smallerYInput == 1) {
+			return rulesSolution[0];
+		} else if (smallerXInput == 1 && smallerYInput == 4) {
+			return rulesSolution[1];
+		} else if (smallerXInput == 1 && smallerYInput == 7) {
+			return rulesSolution[2];
+		} else if (smallerXInput == 4 && smallerYInput == 1) {
+			return rulesSolution[3];
+		} else if (smallerXInput == 4 && smallerYInput == 4) {
+			return rulesSolution[4];
+		} else if (smallerXInput == 4 && smallerYInput == 7) {
+			return rulesSolution[5];
+		} else if (smallerXInput == 7 && smallerYInput == 1) {
+			return rulesSolution[6];
+		} else if (smallerXInput == 7 && smallerYInput == 4) {
+			return rulesSolution[7];
+		} else {
+			return rulesSolution[8];
+		}
 	}
 	
 	// Read a input file and write the data to sudoku matrix
