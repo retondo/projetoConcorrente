@@ -7,20 +7,22 @@ import data.Matrix;
 public class Main {
 	
 	public static void main(String[] args) {
-		Matrix m = new Matrix();
-		Scanner s = new Scanner(System.in);
+		Matrix matrix = new Matrix();
+		Solver solver = new Solver(matrix);
+		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("Insira o nome do arquivo de entrada: ");
-		String fileName = s.next();
+		String fileName = scanner.next();
 		
-		// Lê o arquivo de entrada e imprime a matriz
+		// Read input and print the result
 		try {
-			m.read(fileName);
-			m.print();
+			matrix.read(fileName);
+			solver.solve();
+			matrix.print();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			s.close();
+			scanner.close();
 		}
 		
 		

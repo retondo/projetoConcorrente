@@ -21,19 +21,19 @@ public class Matrix {
 											"DHAIECBF", "GEBIDCFA", "FHCGEADB" };
 	}
 	
-	public int[] getRow(int x) {
+	public synchronized int[] getRow(int x) {
 		return matrix[x];
 	}
 	
-	public int[] getColumn(int y) {
+	public synchronized int[] getColumn(int y) {
 		return matrix[y];
 	}
 
-	public int getCellValue(int x, int y) {
+	public synchronized int getCellValue(int x, int y) {
 		return matrix[x][y];
 	}
 
-	public void setCellValue(int value, int x, int y) {
+	public synchronized void setCellValue(int value, int x, int y) {
 		matrix[x][y] = value;
 	}
 	
@@ -67,7 +67,7 @@ public class Matrix {
 		}
 	}
 	
-	// Read a input file and write the data to sudoku matrix
+	// Read a input file and write the values to sudoku matrix
 	public void read(String fileName) throws IOException {
 		try {
 			Scanner file = new Scanner(new File(fileName));

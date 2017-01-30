@@ -2,140 +2,125 @@ package sudoku;
 
 import data.Matrix;
 
-public class SolveSubmatrix implements Runnable {
-	private char s;
-	private Matrix m;
+public class SolveSubmatrix {
+	private char submatrix;
+	private Matrix matrix;
+	private int i, j, m, n;
 	
 	public SolveSubmatrix(Matrix matrix, char submatrix) {
-		this.s = submatrix;
-		this.m = matrix;
+		this.submatrix = submatrix;
+		this.matrix = matrix;
+		i = j = m = n = 0;
 	}
 	
-	@Override
-	public void run() {
-		switch (s) {
-		case 'A':
-			solveSubmatrixA();
-		case 'B':
-			solveSubmatrixB();
-		case 'C':
-			solveSubmatrixC();
-		case 'D':
-			solveSubmatrixD();
-		case 'E':
-			solveSubmatrixE();
-		case 'F':
-			solveSubmatrixF();
-		case 'G':
-			solveSubmatrixG();
-		case 'H':
-			solveSubmatrixH();
-		case 'I':
-			solveSubmatrixI();
-		}
-	}
+	/*@Override
+	public void start() {
+		solve();
+	}*/
 	
-	private int[] missingNumbers(int x, int y, char square) {
-		int[] row = m.getRow(x), column = m.getColumn(y);
+	private synchronized int[] missingNumbers(int x, int y) {
+		int[] row = matrix.getRow(x), column = matrix.getColumn(y);
 		int[] squa = new int[9], aux = new int[9];
-		int k = 0, i = 0, j = 0;
+		int k = 0, p = 0, q = 0;
 		
 		// Fill an auxiliar array with 1..9 
-		// and change the existing numbers in square by 0 on aux array 
-		for (i=0; i<9; i++) {
-			squa[i] = i+1;
+		// and change the existing numbers in square, row and column by 0 on aux array 
+		for (p=0; p<9; p++) {
+			aux[p] = p+1;
 		}
 		
-		switch (square) {
-		case 'A':
-			i = 0;
-			j = 0;
-		case 'B':
-			i = 0;
-			j = 3;
-		case 'C':
-			i = 0;
-			j = 6;
-		case 'D':
-			i = 3;
-			j = 0;
-		case 'E':
-			i = 3;
-			j = 3;
-		case 'F':
-			i = 3;
-			j = 6;
-		case 'G':
-			i = 6;
-			j = 0;
-		case 'H':
-			i = 6;
-			j = 3;
-		case 'I':
-			i = 6;
-			j = 6;
-		}
+		// set new i,j
+		p = i; q = j;
+		setInitialCoordinates();
 		
+		// Fill squa vector until x,y coordinate
 		for (; i<=x; i++) {
 			for (; j<=y; j++) {
 				k = 0;
-				int value = m.getCellValue(i, j);
+				int value = matrix.getCellValue(i, j);
 				if (value != 0) {
-					while (value != squa[k])
-						k++;
-					squa[k] = 0;
+					for (k = 0; k < 9 && value != aux[k]; k++);
+					if (k < 9)
+						squa[k] = 0;
 				}
 			}
 		}
+		i = p; j = q;
 		
-		// TODO juntar os numeros que faltam
-		for (i=0, j=0; i<9; i++, j++) {
-			
-			
+		// Splice 3 vectors
+		int[] numbers = new int[row.length + column.length + squa.length];
+	    for (p = 0, q = 0; p < row.length; p++, q++) {
+	        if (row[p] != 0)
+	    		numbers[q] = row[p];
+	        
+	        if (column[p] != 0)
+	        	numbers[++q] = column[p];
+	        
+	        if (squa[p] != 0)
+	        	numbers[++q] = squa[p];
+	    }
+	    
+	    // Match values between numbers and aux vectors are assigned in aux by 0
+		for (p = 0; p < numbers.length; p++) {
+			if (numbers[p] != 0) {
+				for (q = 0; q < 9 && numbers[p] != aux[q]; q++);
+				if (q < 9)
+					aux[q] = 0;
+			}
 		}
 		
 		return aux;
 	}
 	
-	private void solveSubmatrixA() {
-		int[] mn;
+	private void setInitialCoordinates() {
+		// Set i initial coordinate 
+		if (submatrix == 'A' || submatrix == 'B' || submatrix == 'C') {
+			i = 0;
+			m = 3;
+		} else if (submatrix == 'D' || submatrix == 'E' || submatrix == 'F') {
+			i = 3;
+			m = 6;
+		} else {
+			i = 6;
+			m = 9;
+		}
 		
-		for (int i=0; i<3; i++) {
-			for (int j=0; j<3; j++) {
-				mn = missingNumbers(x, y);
-			}
+		// Set j initial coordinate
+		if (submatrix == 'A' || submatrix == 'D' || submatrix == 'G') {
+			j = 0;
+			n = 3;
+		} else if (submatrix == 'B' || submatrix == 'E' || submatrix == 'H') {
+			j = 3;
+			n = 6;
+		} else {
+			j = 6;
+			n = 9;
 		}
 	}
 	
-	private void solveSubmatrixB() {
+	public void solve() {
+		int[] mn;
+		int w;
 		
-	}
-
-	private void solveSubmatrixC() {
+		setInitialCoordinates();
 		
-	}
-	
-	private void solveSubmatrixD() {
-		
-	}
-	
-	private void solveSubmatrixE() {
-		
-	}
-	
-	private void solveSubmatrixF() {
-		
-	}
-	
-	private void solveSubmatrixG() {
-		
-	}
-	
-	private void solveSubmatrixH() {
-		
+		int c, r = i, t = j;
+		//for (c = 0; c < 3; c++) {
+			for (; i<m; i++) {
+				for (; j<n; j++) {
+					mn = missingNumbers(i, j);
+					
+					if (matrix.getCellValue(i, j) == 0) {
+						for (w = 0; w < 9 && mn[w] == 0; w++);
+						matrix.setCellValue(mn[w], i, j);
+					} else {
+						Error e = new Error("Célula "+i+","+j+" não está vazia.");
+						System.out.println(e.getMessage());
+					}
+				}
+				j = t;
+			}
+		//}
 	}
 	
-	private void solveSubmatrixI() {
-		
-	}
 }

@@ -15,11 +15,18 @@ public class Solver {
 		rule = m.getRulesSolution();
 		SolveSubmatrix s1, s2;
 		
-		for (int i=0; i<4; i++) {
+		for (int i=0; i<9; i++) {
 			s1 = new SolveSubmatrix(m, rule.charAt(i));
-			s2 = new SolveSubmatrix(m, rule.charAt(i+1));
-			s1.run();
-			s2.run();
+			//s2 = new SolveSubmatrix(m, rule.charAt(i+1));
+			s1.solve();
+			//s2.start();
+			/*try {
+				s1.join();
+				s2.join();
+			} catch (InterruptedException ie) {
+				System.out.println(ie.getMessage());
+			}*/
+			m.print();
 		}
 		
 	}
