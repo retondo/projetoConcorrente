@@ -36,16 +36,65 @@ public class SolveSubmatrix implements Runnable {
 	}
 	
 	private int[] missingNumbers(int x, int y, char square) {
-		int[] row = m.getRow(x);
-		int[] column = m.getColumn(y);
-		int[] aux = new int[9];
+		int[] row = m.getRow(x), column = m.getColumn(y);
+		int[] squa = new int[9], aux = new int[9];
+		int k = 0, i = 0, j = 0;
 		
-		for (int i=0; i<9; i++) {
-			aux[i] = i+1;
+		// Fill an auxiliar array with 1..9 
+		// and change the existing numbers in square by 0 on aux array 
+		for (i=0; i<9; i++) {
+			squa[i] = i+1;
 		}
 		
-		// TODO verificar numeros existentes no quadrado 3x3
+		switch (square) {
+		case 'A':
+			i = 0;
+			j = 0;
+		case 'B':
+			i = 0;
+			j = 3;
+		case 'C':
+			i = 0;
+			j = 6;
+		case 'D':
+			i = 3;
+			j = 0;
+		case 'E':
+			i = 3;
+			j = 3;
+		case 'F':
+			i = 3;
+			j = 6;
+		case 'G':
+			i = 6;
+			j = 0;
+		case 'H':
+			i = 6;
+			j = 3;
+		case 'I':
+			i = 6;
+			j = 6;
+		}
 		
+		for (; i<=x; i++) {
+			for (; j<=y; j++) {
+				k = 0;
+				int value = m.getCellValue(i, j);
+				if (value != 0) {
+					while (value != squa[k])
+						k++;
+					squa[k] = 0;
+				}
+			}
+		}
+		
+		// TODO juntar os numeros que faltam
+		for (i=0, j=0; i<9; i++, j++) {
+			
+			
+		}
+		
+		return aux;
 	}
 	
 	private void solveSubmatrixA() {
